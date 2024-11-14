@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EPI-KID Questionnaire on Cost of Illness</title>
+    <style>
+        /* Your existing styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f9fc;
+            margin: 0;
+            padding: 20px;
+        }
+        header {
+            background-color: #2a9df4;
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        form {
+            background-color: white;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 900px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        input[type="submit"] {
+            background-color: #2a9df4;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #1b7fc6;
+        }
+        footer {
+            text-align: center;
+            margin-top: 20px;
+        }
+        a {
+            color: #2a9df4;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>EPI-KID Questionnaire on Cost of Illness</h1>
+        <p>A comprehensive tool to assess the economic impact of pediatric epilepsy</p>
+    </header>
+    <form method="POST" name="google-sheet">
+        <h2>Domain 1: Sociodemographics</h2>
+        <label>(a). Gender of Patient:</label>
+        <select name="gender" required>
+            <option value="" selected hidden>Select gender</option>   
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Nonbinary, genderqueer, not exclusively female/male">Nonbinary, genderqueer, not exclusively female/male</option>
+            <option value="Transgender Female">Transgender Female</option>
+            <option value="Transgender Male">Transgender Male</option>
+            <option value="Prefer not to answer">Prefer not to answer</option>
+        </select>
+        <label>(b). Date of Birth:</label>
+        <input type="date" name="dob" required>
+        <label>(c). Marital Status of Parents:</label>
+        <select name="marital_status" required>
+            <option value="" selected hidden>Select marital status</option>
+            <option value="Living together">Living together</option>                                                 
+            <option value="Separated">Separated</option>                                                                                             
+            <option value="Divorced">Divorced</option>     
+        </select>
+        <input type="submit" value="Submit" name="submit">
+    </form>
+
+    <p id="download-link"></p> <!-- Placeholder for the download link -->
+
+    <script>
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbzW5_WJDsgsAg4GlTj6ZtR4b5IU1mms4UFv6-61MJJ0LeUdR5W5_cuArjWhrGG8iRaMzw/exec';
+        const form = document.forms['google-sheet'];
+        const downloadLinkElement = document.getElementById('download-link');
+
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+            fetch(scriptURL, { method: 'POST', body: new FormData(form) })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.result === 'success') {
+                        downloadLinkElement.innerHTML = `
+                            <p>Thank you for your response! <a href="${data.downloadUrl}" download>Click here to download your response</a>.</p>
+                        `;
+                    } else {
+                        alert('Error: ' + data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error!', error);
+                    alert('An unexpected error occurred.');
+                });
+        });
+    </script>
+</body>
+</html>
+
